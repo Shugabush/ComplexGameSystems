@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <atomic>
 #include <iostream>
 #include <cassert>
@@ -38,7 +39,7 @@ public:
 	// move constructor
 	TCircularQueue(TCircularQueue&& other)
 	{
-		this = &other;
+		*this = other;
 	}
 	// copy constructor
 	TCircularQueue(const TCircularQueue& other)
@@ -55,9 +56,10 @@ public:
 	TCircularQueue& operator =(TCircularQueue&& other)
 	{
 		Arr = other.Arr;
-		&RawCapacity = &other.RawCapacity;
-		&ReadIndex = &other.ReadIndex;
-		&WriteIndex = &other.WriteIndex;
+
+		std::swap(RawCapacity, other.RawCapacity);
+		std::swap(ReadIndex, other.ReadIndex);
+		std::swap(WriteIndex, other.WriteIndex);
 		return *this;
 	}
 	// copy assignment
@@ -109,14 +111,14 @@ public:
 	// returns true if all elements in the array are popped
 	bool Empty() const
 	{
-		return Size() == 0;
+		return ReadIndex == WriteIndex;
 	}
 	// returns the current number of elements pushed
 	size_t Size() const
 	{
 		if (WriteIndex < ReadIndex)
 		{
-			return WriteIndex - (RawCapacity - ReadIndex);
+			return WriteIndex + (RawCapacity - ReadIndex);
 		}
 
 		return WriteIndex - ReadIndex;

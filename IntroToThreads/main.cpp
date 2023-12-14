@@ -6,6 +6,11 @@
 #include "Logger.h"
 #include "TCircularQueue.h"
 
+TCircularQueue<int> MakeQueue()
+{
+	return TCircularQueue<int>();
+}
+
 int main()
 {
 	/*Logger logger;
@@ -53,8 +58,6 @@ int main()
 	queue.Push(35);
 	queue.Push(37);
 	queue.Push(32);
-
-	TCircularQueue<int> queue2;
 
 	while (!queue.Empty())
 	{
