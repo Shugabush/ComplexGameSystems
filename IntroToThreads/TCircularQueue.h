@@ -35,10 +35,44 @@ public:
 		ReadIndex.store(0);
 		WriteIndex.store(0);
 	}
+	// move constructor
+	TCircularQueue(TCircularQueue&& other)
+	{
+		this = &other;
+	}
+	// copy constructor
+	TCircularQueue(const TCircularQueue& other)
+	{
+		*this = other;
+	}
 	// cleans up any dynamically allocated data
 	~TCircularQueue()
 	{
 		delete[] Arr;
+	}
+
+	// move assignment
+	TCircularQueue& operator =(TCircularQueue&& other)
+	{
+		Arr = other.Arr;
+		&RawCapacity = &other.RawCapacity;
+		&ReadIndex = &other.ReadIndex;
+		&WriteIndex = &other.WriteIndex;
+		return *this;
+	}
+	// copy assignment
+	TCircularQueue& operator =(const TCircularQueue& other)
+	{
+		Arr = new T[other.RawCapacity];
+		for (size_t i = 0; i < other.RawCapacity; i++)
+		{
+			Arr[i] = other.Arr[i];
+		}
+
+		RawCapacity = other.RawCapacity;
+		ReadIndex = other.ReadIndex.load();
+		WriteIndex = other.WriteIndex.load();
+		return *this;
 	}
 
 	// writes a value at the write index

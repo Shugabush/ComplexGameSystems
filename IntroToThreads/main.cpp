@@ -54,6 +54,8 @@ int main()
 	queue.Push(37);
 	queue.Push(32);
 
+	TCircularQueue<int> queue2;
+
 	while (!queue.Empty())
 	{
 		std::cout << queue.Front() << std::endl;
