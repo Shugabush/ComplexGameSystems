@@ -2,38 +2,57 @@
 
 #include <iostream>
 #include <fstream>
+#include <mutex>
 
-void Print(std::string text, std::string filenameToWriteTo);
+std::mutex queueLock;
+bool shouldKill = false;
 
-Logger::Logger(std::string filenameToWriteTo)
+void WriteToFile(std::queue<std::string>* msgQueue, std::fstream* stream)
 {
-	filename = filenameToWriteTo;
-}
-
-void Logger::Log(std::string text)
-{
-	thread = std::thread(Print, text, filename);
-	thread.join();
-}
-
-void Print(std::string text, std::string filenameToWriteTo)
-{
-	std::string existingText;
-
-	// Read text from the file if it exists,
-	// and add that 
-	std::ifstream readFile(filenameToWriteTo);
-	if (readFile.is_open())
+	while (!msgQueue->empty() || !shouldKill)
 	{
-		std::string line;
-		while (std::getline(readFile, line))
+		while (!msgQueue->empty())
 		{
-			existingText += line + "\n";
+			queueLock.lock();
+
+			*stream << msgQueue->front() << std::endl;
+			msgQueue->pop();
+			stream->flush();
+
+			queueLock.unlock();
 		}
 	}
 
-	std::ofstream myFile;
-	myFile.open(filenameToWriteTo);
-	myFile << existingText + text + "\n";
-	myFile.close();
+	stream->close();
+}
+
+Logger::Logger()
+{
+	Stream = nullptr;
+}
+
+Logger::~Logger()
+{
+	shouldKill = true;
+	WriteThread.join();
+	if (Stream != nullptr)
+	{
+		Stream->close();
+	}
+	delete Stream;
+	Stream = nullptr;
+}
+
+void Logger::Init(const std::string& logFileName)
+{
+	Stream = new std::fstream(logFileName, std::ios::out);
+
+	WriteThread = std::thread(WriteToFile, &Messages, Stream);
+}
+
+void Logger::Log(const std::string& logText)
+{
+	queueLock.lock();
+	Messages.push(logText);
+	queueLock.unlock();
 }

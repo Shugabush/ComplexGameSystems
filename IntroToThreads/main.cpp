@@ -18,9 +18,14 @@ void Print()
 
 int main()
 {
-	Logger logger("log.txt");
+	Logger logger;
+	logger.Init("log.txt");
 
-	logger.Log("100");
+	logger.Log("Hello Log");
+	logger.Log("Hello Log");
+	logger.Log("Hello Log");
+	logger.Log("Hello Log");
+	logger.Log("Hello Log");
 
 	return 0;
 }

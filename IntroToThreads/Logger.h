@@ -1,15 +1,24 @@
 #pragma once
-#include <string>
+
 #include <thread>
+#include <string>
+#include <queue>
+#include <fstream>
 
 class Logger
 {
-public:
-	Logger(std::string filenameToWriteTo);
+	std::fstream* Stream;
 
-	void Log(std::string text);
+	std::thread WriteThread;
+
+	std::queue<std::string> Messages;
+
+public:
+	Logger();
+	~Logger();
+
+	void Init(const std::string& logFileName);
+	void Log(const std::string& logText);
 
 private:
-	std::thread thread;
-	std::string filename;
 };
