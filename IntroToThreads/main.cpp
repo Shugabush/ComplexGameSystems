@@ -5,17 +5,6 @@
 
 #include "Logger.h"
 
-static std::mutex myMutex;
-
-void Print()
-{
-	myMutex.lock();
-
-	std::cout << "Hello Thread" << std::endl;
-	
-	myMutex.unlock();
-}
-
 int main()
 {
 	Logger logger;
@@ -26,6 +15,8 @@ int main()
 	logger.Log("Hello Log");
 	logger.Log("Hello Log");
 	logger.Log("Hello Log");
+
+	logger.Term();
 
 	return 0;
 }

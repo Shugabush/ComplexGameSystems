@@ -1,8 +1,7 @@
 #include "Logger.h"
 
-#include <iostream>
-#include <fstream>
 #include <mutex>
+#include <fstream>
 
 std::mutex queueLock;
 bool shouldKill = false;
@@ -11,6 +10,9 @@ void WriteToFile(std::queue<std::string>* msgQueue, std::fstream* stream)
 {
 	while (!msgQueue->empty() || !shouldKill)
 	{
+		// before checking again, delay for a little bit
+		std::this_thread::sleep_for(std::chrono::duration<float>(0.1f));
+
 		while (!msgQueue->empty())
 		{
 			queueLock.lock();
@@ -33,8 +35,7 @@ Logger::Logger()
 
 Logger::~Logger()
 {
-	shouldKill = true;
-	WriteThread.join();
+	Term();
 	if (Stream != nullptr)
 	{
 		Stream->close();
@@ -46,7 +47,6 @@ Logger::~Logger()
 void Logger::Init(const std::string& logFileName)
 {
 	Stream = new std::fstream(logFileName, std::ios::out);
-
 	WriteThread = std::thread(WriteToFile, &Messages, Stream);
 }
 
@@ -55,4 +55,13 @@ void Logger::Log(const std::string& logText)
 	queueLock.lock();
 	Messages.push(logText);
 	queueLock.unlock();
+}
+
+void Logger::Term()
+{
+	shouldKill = true;
+	if (WriteThread.joinable())
+	{
+		WriteThread.join();
+	}
 }

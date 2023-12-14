@@ -3,7 +3,6 @@
 #include <thread>
 #include <string>
 #include <queue>
-#include <fstream>
 
 class Logger
 {
@@ -19,6 +18,5 @@ public:
 
 	void Init(const std::string& logFileName);
 	void Log(const std::string& logText);
-
-private:
+	void Term();
 };
