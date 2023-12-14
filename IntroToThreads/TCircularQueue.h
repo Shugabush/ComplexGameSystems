@@ -23,6 +23,7 @@ public:
 	// dynamically allocates the array
 	TCircularQueue()
 	{
+		RawCapacity = 16;
 		Arr = new T[RawCapacity];
 		ReadIndex.store(0);
 		WriteIndex.store(0);
@@ -30,6 +31,9 @@ public:
 	TCircularQueue(size_t minCapacity)
 	{
 		RawCapacity = minCapacity;
+		Arr = new T[RawCapacity];
+		ReadIndex.store(0);
+		WriteIndex.store(0);
 	}
 	// cleans up any dynamically allocated data
 	~TCircularQueue()
@@ -93,6 +97,15 @@ public:
 	{
 		if (RawCapacity < minCapacity)
 		{
+			// Remake the array with the new capacity
+			T* newArray = new T[minCapacity];
+			for (size_t i = 0; i < RawCapacity; i++)
+			{
+				newArray[i] = Arr[i];
+			}
+
+			Arr = newArray;
+
 			RawCapacity = minCapacity;
 		}
 	}
