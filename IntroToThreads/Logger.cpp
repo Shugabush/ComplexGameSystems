@@ -6,19 +6,19 @@
 std::mutex queueLock;
 bool shouldKill = false;
 
-void WriteToFile(std::queue<std::string>* msgQueue, std::fstream* stream)
+void WriteToFile(TCircularQueue<std::string>* msgQueue, std::fstream* stream)
 {
-	while (!msgQueue->empty() || !shouldKill)
+	while (!msgQueue->Empty() || !shouldKill)
 	{
 		// before checking again, delay for a little bit
 		std::this_thread::sleep_for(std::chrono::duration<float>(0.1f));
 
-		while (!msgQueue->empty())
+		while (!msgQueue->Empty())
 		{
 			queueLock.lock();
 
-			*stream << msgQueue->front() << std::endl;
-			msgQueue->pop();
+			*stream << msgQueue->Front() << std::endl;
+			msgQueue->Pop();
 			stream->flush();
 
 			queueLock.unlock();
@@ -53,7 +53,7 @@ void Logger::Init(const std::string& logFileName)
 void Logger::Log(const std::string& logText)
 {
 	queueLock.lock();
-	Messages.push(logText);
+	Messages.Push(logText);
 	queueLock.unlock();
 }
 

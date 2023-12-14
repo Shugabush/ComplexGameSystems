@@ -8,18 +8,29 @@
 
 int main()
 {
-	/*Logger logger;
+	Logger logger;
 	logger.Init("log.txt");
 
-	logger.Log("Hello Log");
-	logger.Log("Hello Log");
-	logger.Log("Hello Log");
-	logger.Log("Hello Log");
-	logger.Log("Hello Log");
+	logger.Log("Hello Log 1");
+	logger.Log("Hello Log 2");
+	logger.Log("Hello Log 3");
+	logger.Log("Hello Log 4");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 5");
+	logger.Log("Hello Log 16");
 
-	logger.Term();*/
+	logger.Term();
 
-	TCircularQueue<int> queue;
+	/*TCircularQueue<int> queue;
 	queue.Push(0);
 	queue.Push(5);
 	queue.Push(7);
@@ -41,7 +52,7 @@ int main()
 	{
 		std::cout << queue.Front() << std::endl;
 		queue.Pop();
-	}
+	}*/
 
 	return 0;
 }

@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <iostream>
+#include <cassert>
 
 // let T represent the type of object stored in the queue
 template<typename T>
@@ -11,7 +12,7 @@ class TCircularQueue
 	T* Arr;
 
 	// capacity of the raw array
-	static const size_t RAW_CAPACITY = 16;
+	size_t RawCapacity = 16;
 
 	// the first index to read from (aka front)
 	std::atomic<size_t> ReadIndex;
@@ -22,9 +23,13 @@ public:
 	// dynamically allocates the array
 	TCircularQueue()
 	{
-		Arr = new T[RAW_CAPACITY];
+		Arr = new T[RawCapacity];
 		ReadIndex.store(0);
 		WriteIndex.store(0);
+	}
+	TCircularQueue(size_t minCapacity)
+	{
+		RawCapacity = minCapacity;
 	}
 	// cleans up any dynamically allocated data
 	~TCircularQueue()
@@ -32,25 +37,25 @@ public:
 		delete[] Arr;
 	}
 
-	// returns true if it writes a value at the write index, otherwise false
-	bool Push(const T& val)
+	// writes a value at the write index
+	void Push(const T& val)
 	{
+		assert(Size() < Capacity() && "No more room for queue!");
 		if (Size() < Capacity())
 		{
-			WriteIndex = WriteIndex.load() % RAW_CAPACITY;
+			WriteIndex = WriteIndex.load() % RawCapacity;
 
 			Arr[WriteIndex.load()] = val;
 
 			WriteIndex++;
-
-			return true;
 		}
-		return false;
 	}
 	// returns true if it pops the value at the read index, otherwise false
 	bool Pop()
 	{
-		ReadIndex = ReadIndex.load() % RAW_CAPACITY;
+		if (Empty()) return false;
+
+		ReadIndex = ReadIndex.load() % RawCapacity;
 
 		Arr[ReadIndex.load()].~T();
 		ReadIndex++;
@@ -73,7 +78,7 @@ public:
 	{
 		if (WriteIndex < ReadIndex)
 		{
-			return WriteIndex - (RAW_CAPACITY - ReadIndex);
+			return WriteIndex - (RawCapacity - ReadIndex);
 		}
 
 		return WriteIndex - ReadIndex;
@@ -81,6 +86,14 @@ public:
 	// returns the maximum number of elements that can be pushed
 	size_t Capacity() const
 	{
-		return RAW_CAPACITY;
+		return RawCapacity;
+	}
+
+	void Reserve(size_t minCapacity)
+	{
+		if (RawCapacity < minCapacity)
+		{
+			RawCapacity = minCapacity;
+		}
 	}
 };

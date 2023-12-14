@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TCircularQueue.h"
+
 #include <thread>
 #include <string>
 #include <queue>
@@ -10,7 +12,7 @@ class Logger
 
 	std::thread WriteThread;
 
-	std::queue<std::string> Messages;
+	TCircularQueue<std::string> Messages;
 
 public:
 	Logger();
