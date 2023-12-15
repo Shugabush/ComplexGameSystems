@@ -1,51 +1,70 @@
 #include "GameManager.h"
+#include <iostream>
 
-void GameManager::Update(float deltaTime)
+GameManager::GameManager()
 {
-	while (!pendingObjects.empty())
+	EM = new EnemyManager();
+}
+
+void GameManager::InitEnemyThread()
+{
+	EnemyThread = std::thread(&EnemyManager::Update, EM);
+}
+
+void GameManager::Update()
+{
+	EM->ShouldUpdate = true;
+
+	//std::cout << "Updating Game Manager" << std::endl;
+	while (!PendingObjects.empty())
 	{
-		GameObject* obj = pendingObjects.front();
-		gameObjects.push_back(obj);
-		pendingObjects.pop();
+		GameObject* obj = PendingObjects.front();
+		GameObjects.push_back(obj);
+		PendingObjects.pop();
 	}
 
-	while (!destroyedObjects.empty())
+	while (!DestroyedObjects.empty())
 	{
-		GameObject* obj = destroyedObjects.front();
-		gameObjects.erase(std::remove(gameObjects.begin(), gameObjects.end(), obj), gameObjects.end());
-		destroyedObjects.pop();
+		GameObject* obj = DestroyedObjects.front();
+		GameObjects.erase(std::remove(GameObjects.begin(), GameObjects.end(), obj), GameObjects.end());
+		DestroyedObjects.pop();
 		delete obj;
 	}
 
-	for (auto obj : gameObjects)
+	for (auto obj : GameObjects)
 	{
-		obj->EarlyUpdate(deltaTime);
+		obj->EarlyUpdate();
 	}
 
-	for (auto obj : gameObjects)
+	for (auto obj : GameObjects)
 	{
-		obj->Update(deltaTime);
+		obj->Update();
 	}
 
-	for (auto obj : gameObjects)
+	for (auto obj : GameObjects)
 	{
-		obj->LateUpdate(deltaTime);
+		obj->LateUpdate();
 	}
 }
 
 void GameManager::Draw()
 {
-	for (auto obj : gameObjects)
+	// Wait for enemy manager to update before drawing
+	while (EM->ShouldUpdate) {}
+
+	EM->Draw();
+
+	for (auto obj : GameObjects)
 	{
 		obj->EarlyDraw();
 	}
 
-	for (auto obj : gameObjects)
+	for (auto obj : GameObjects)
 	{
 		obj->Draw();
 	}
 
-	for (auto obj : gameObjects)
+	for (auto obj : GameObjects)
 	{
 		obj->LateDraw();
 	}
@@ -53,10 +72,10 @@ void GameManager::Draw()
 
 void GameManager::SpawnObject(GameObject* obj)
 {
-	pendingObjects.push(obj);
+	PendingObjects.push(obj);
 }
 
 void GameManager::DestroyObject(GameObject* obj)
 {
-	destroyedObjects.push(obj);
+	DestroyedObjects.push(obj);
 }

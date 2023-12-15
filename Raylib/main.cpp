@@ -21,14 +21,18 @@ int main()
 	player->Texture.height *= 2;
 	gm->SpawnObject(player);
 
+	gm->InitEnemyThread();
+
+	gm->EM->SpawnEnemy(new Enemy());
+
 	SetTargetFPS(60);
 
 	while (!window.ShouldClose())
 	{
 		ClearBackground(RAYWHITE);
-
-		gm->Update(GetFrameTime());
 		
+		gm->Update();
+
 		BeginDrawing();
 
 		gm->Draw();

@@ -15,9 +15,9 @@ public:
 
 	virtual void Start();
 
-	virtual void EarlyUpdate(float deltaTime);
-	virtual void Update(float deltaTime);
-	virtual void LateUpdate(float deltaTime);
+	virtual void EarlyUpdate();
+	virtual void Update();
+	virtual void LateUpdate();
 
 	virtual void EarlyDraw();
 	virtual void Draw();

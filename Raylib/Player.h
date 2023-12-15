@@ -8,5 +8,5 @@ public:
 	Vector2 Velocity;
 	float MovementSpeed = 5;
 
-	virtual void Update(float deltaTime) override;
+	virtual void Update() override;
 };

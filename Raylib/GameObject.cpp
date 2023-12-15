@@ -13,17 +13,17 @@ void GameObject::Start()
 
 }
 
-void GameObject::EarlyUpdate(float deltaTime)
+void GameObject::EarlyUpdate()
 {
 	
 }
 
-void GameObject::Update(float deltaTime)
+void GameObject::Update()
 {
 	
 }
 
-void GameObject::LateUpdate(float deltaTime)
+void GameObject::LateUpdate()
 {
 	Position = Vector2Clamp(Position, { 0, 0 }, { (float)GetScreenWidth(), (float)GetScreenHeight() });
 }

@@ -1,9 +1,10 @@
 #include "Player.h"
+#include "GameManager.h"
 
 #include "Ray.hpp"
 #include "raymath.h"
 
-void Player::Update(float deltaTime)
+void Player::Update()
 {
 	if (IsKeyDown(KEY_UP))
 	{
@@ -31,7 +32,7 @@ void Player::Update(float deltaTime)
 		Velocity.x = 0;
 	}
 
-	Velocity = Vector2Scale(Vector2Normalize(Velocity), MovementSpeed * deltaTime * 60);
+	Velocity = Vector2Scale(Vector2Normalize(Velocity), MovementSpeed * GetFrameTime() * 60);
 
 	Position = Vector2Add(Position, Velocity);
 }

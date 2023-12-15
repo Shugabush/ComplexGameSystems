@@ -1,18 +1,30 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Player.h"
+#include "EnemyManager.h"
 
 #include <vector>
 #include <queue>
+#include <thread>
+#include <mutex>
 
 class GameManager
 {
-	std::queue<GameObject*> pendingObjects;
-	std::vector<GameObject*> gameObjects;
-	std::queue<GameObject*> destroyedObjects;
+	std::thread EnemyThread;
+
+	std::queue<GameObject*> PendingObjects;
+	std::vector<GameObject*> GameObjects;
+	std::queue<GameObject*> DestroyedObjects;
 
 public:
-	void Update(float deltaTime);
+	EnemyManager* EM;
+
+	GameManager();
+
+	void InitEnemyThread();
+
+	void Update();
 	void Draw();
 
 	void SpawnObject(GameObject* obj);
