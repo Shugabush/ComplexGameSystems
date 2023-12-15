@@ -19,13 +19,14 @@ int main()
 	player->Texture = LoadTexture("Ships/ship_0000.png");
 	player->Texture.width *= 2;
 	player->Texture.height *= 2;
+	player->Rotation = -90;
 	gm->SpawnObject(player);
 
 	gm->InitEnemyThread();
 
 	Texture2D EnemyTexture = LoadTexture("Ships/ship_0012.png");
 
-	for (size_t i = 0; i < 250; i++)
+	for (size_t i = 0; i < 25; i++)
 	{
 		Enemy* newEnemy = new Enemy();
 		newEnemy->Texture = EnemyTexture;
