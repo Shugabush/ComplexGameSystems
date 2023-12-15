@@ -26,7 +26,7 @@ int main()
 
 	Texture2D EnemyTexture = LoadTexture("Ships/ship_0012.png");
 
-	for (size_t i = 0; i < 50; i++)
+	for (size_t i = 0; i < 1; i++)
 	{
 		Enemy* newEnemy = new Enemy();
 		newEnemy->Texture = EnemyTexture;

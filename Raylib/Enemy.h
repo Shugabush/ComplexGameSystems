@@ -13,5 +13,5 @@ public:
 	GameObject* TargetObj;
 
 	float MovementSpeed = 5;
-	float RotationSpeed = 5;
+	float RotationSpeed = 1;
 };

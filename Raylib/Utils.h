@@ -1,6 +1,7 @@
 #pragma once
 
 #include <raylib.h>
+#include <iostream>
 
 struct Utils
 {
@@ -46,14 +47,15 @@ struct Utils
 	template<typename T>
 	static inline T MoveTowards(T current, T target, float maxDelta)
 	{
-		T deltaMovement = target - current;
+		T delta = target - current;
+		T mag = abs(delta);
 
-		if (-maxDelta < deltaMovement && deltaMovement < maxDelta)
+		if (mag <= maxDelta)
 		{
 			return target;
 		}
 
-		return current + deltaMovement;
+		return current + copysign(maxDelta, delta);
 	}
 
 	template<typename T>
@@ -73,10 +75,14 @@ struct Utils
 	static inline T DeltaAngle(const T& current, const T& target)
 	{
 		float delta = target - current;
-
+		std::cout << delta * RAD2DEG << std::endl;
 		if (delta > PI)
 		{
 			delta -= 2 * PI;
+		}
+		else if (delta < -PI)
+		{
+			delta += 2 * PI;
 		}
 
 		return delta;

@@ -15,5 +15,5 @@ void Enemy::Update()
 
 void Enemy::LateUpdate()
 {
-	Rotation = Utils::RotateTowards(Rotation, TargetRotation, 0.f);
+	Rotation = Utils::RotateTowards(Rotation, TargetRotation, GetFrameTime() * RotationSpeed);
 }
