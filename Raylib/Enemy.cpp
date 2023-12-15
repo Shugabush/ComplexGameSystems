@@ -8,6 +8,12 @@ void Enemy::Update()
 	if (TargetObj != nullptr)
 	{
 		Position = Vector2Lerp(Position, TargetObj->Position, GetFrameTime() * MovementSpeed);
-		Rotation = GetLookAtRotation(Position, TargetObj->Position);
+
+		TargetRotation = Utils::GetLookRotation(Position, TargetObj->Position);
 	}
+}
+
+void Enemy::LateUpdate()
+{
+	Rotation = Utils::RotateTowards(Rotation, TargetRotation, 0.f);
 }

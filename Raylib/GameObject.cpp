@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Utils.h"
 
 GameObject::GameObject()
 {
@@ -6,6 +7,11 @@ GameObject::GameObject()
 	Rotation = 0;
 	Texture = Texture2D();
 	Tint = WHITE;
+}
+
+Vector2 GameObject::GetForwardDirection() const
+{
+	return Utils::VectorFromAngle(Rotation);
 }
 
 void GameObject::Start()
@@ -25,7 +31,7 @@ void GameObject::Update()
 
 void GameObject::LateUpdate()
 {
-	Position = Vector2Clamp(Position, { 0, 0 }, { (float)GetScreenWidth(), (float)GetScreenHeight() });
+	
 }
 
 void GameObject::EarlyDraw()
@@ -37,7 +43,10 @@ void GameObject::Draw()
 {
 	DrawTexturePro(Texture, { 0, 0, (float)Texture.width, (float)Texture.height },
 		{ Position.x, Position.y, (float)Texture.width, (float)Texture.height},
-		{ (float)Texture.width * 0.5f, (float)Texture.height * 0.5f }, Rotation, Tint);
+		{ (float)Texture.width * 0.5f, (float)Texture.height * 0.5f }, Rotation * RAD2DEG, Tint);
+
+	//Vector2 fwd = Vector2Scale(GetForwardDirection(), 25);
+	//DrawLine((int)Position.x, (int)Position.y, (int)(Position.x + fwd.x), (int)(Position.y + fwd.y), RED);
 }
 
 void GameObject::LateDraw()

@@ -44,6 +44,8 @@ void GameManager::Update()
 	for (auto obj : GameObjects)
 	{
 		obj->LateUpdate();
+		obj->Position = Vector2Clamp(obj->Position, { 0, 0 },
+			{ (float)GetScreenWidth(), (float)GetScreenHeight() });
 	}
 }
 

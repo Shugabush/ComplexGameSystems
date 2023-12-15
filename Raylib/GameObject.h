@@ -13,6 +13,8 @@ public:
 	Texture2D Texture;
 	Color Tint;
 
+	Vector2 GetForwardDirection() const;
+
 	virtual void Start();
 
 	virtual void EarlyUpdate();
