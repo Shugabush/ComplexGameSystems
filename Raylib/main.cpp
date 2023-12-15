@@ -23,7 +23,23 @@ int main()
 
 	gm->InitEnemyThread();
 
-	gm->EM->SpawnEnemy(new Enemy());
+	Texture2D EnemyTexture = LoadTexture("Ships/ship_0012.png");
+
+	for (size_t i = 0; i < 250; i++)
+	{
+		Enemy* newEnemy = new Enemy();
+		newEnemy->Texture = EnemyTexture;
+		newEnemy->TargetObj = player;
+
+		newEnemy->Position.x = (float)GetRandomValue(0, GetScreenWidth());
+		newEnemy->Position.y = (float)GetRandomValue(0, GetScreenHeight());
+
+		newEnemy->MovementSpeed = (float)GetRandomValue(20, 100) * 0.01f;
+
+		newEnemy->Texture.width *= 2;
+		newEnemy->Texture.height *= 2;
+		gm->EM->SpawnEnemy(newEnemy);
+	}
 
 	SetTargetFPS(60);
 

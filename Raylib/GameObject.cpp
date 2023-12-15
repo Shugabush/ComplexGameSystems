@@ -2,7 +2,7 @@
 
 GameObject::GameObject()
 {
-	Position = { 0, 0 };
+	Position = { GetScreenWidth() * 0.5f, GetScreenHeight() * 0.5f };
 	Rotation = 0;
 	Texture = Texture2D();
 	Tint = WHITE;

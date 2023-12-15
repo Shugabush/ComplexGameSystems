@@ -7,4 +7,8 @@ class Enemy : public GameObject
 
 public:
 	virtual void Update() override;
+
+	GameObject* TargetObj;
+
+	float MovementSpeed = 5;
 };
