@@ -5,6 +5,8 @@
 #include "EnemyManager.h"
 #include "Shape.h"
 
+#include "hash_pair.h"
+
 #include <vector>
 #include <queue>
 #include <thread>
@@ -21,6 +23,7 @@ class GameManager
 	using CollisionMap = std::unordered_map<ShapeType, CollisionFunc>;
 	using DepenetrationMap = std::unordered_map<ShapeType, DepenetrationFunc>;
 
+	using GameObjectCollisionMap = std::unordered_map<std::pair<GameObject*, GameObject*>, bool, hash_pair>;
 
 	std::thread EnemyThread;
 
@@ -32,6 +35,11 @@ class GameManager
 
 	CollisionMap collisionCheckers;
 	DepenetrationMap collisionDepenetrators;
+
+	GameObjectCollisionMap GameObjectsEntered;
+	GameObjectCollisionMap GameObjectsExited;
+
+	void CheckCollision(GameObject* a, GameObject* b);
 
 public:
 	EnemyManager* EM;
@@ -45,5 +53,4 @@ public:
 
 	void SpawnObject(GameObject* obj);
 	void DestroyObject(GameObject* obj);
-
 };

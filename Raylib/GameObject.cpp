@@ -63,8 +63,15 @@ void GameObject::Draw()
 		{ Position.x, Position.y, (float)Texture.width, (float)Texture.height},
 		{ (float)Texture.width * 0.5f, (float)Texture.height * 0.5f }, Rotation * RAD2DEG, Tint);
 
-	//Vector2 fwd = Vector2Scale(GetForwardDirection(), 25);
-	//DrawLine((int)Position.x, (int)Position.y, (int)(Position.x + fwd.x), (int)(Position.y + fwd.y), RED);
+	switch (Collider.Type)
+	{
+	case ShapeType::CIRCLE:
+		DrawCircleLines((int)Position.x, (int)Position.y, Collider.CircleData.Radius, GREEN);
+		break;
+	case ShapeType::AABB:
+		DrawRectangleLines((int)Position.x, (int)Position.y, Collider.AABBData.HalfExtents.x, Collider.AABBData.HalfExtents.y, GREEN);
+		break;
+	}
 }
 
 void GameObject::LateDraw()

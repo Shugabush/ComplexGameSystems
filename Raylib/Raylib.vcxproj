@@ -146,6 +146,7 @@
     <ClInclude Include="EnumUtils.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="hash_pair.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Utils.h" />

@@ -4,6 +4,31 @@
 
 #include <iostream>
 
+void GameManager::CheckCollision(GameObject* a, GameObject* b)
+{
+	ShapeType pairType = a->Collider.Type | b->Collider.Type;
+
+	// Check every object against every other object
+	bool isColliding = collisionCheckers[pairType](a->Position, a->Collider, b->Position, b->Collider);
+
+	if (isColliding)
+	{
+		if (!GameObjectsEntered[{a, b}])
+		{
+			a->OnCollisionEnter(b);
+			GameObjectsEntered[{a, b}] = true;
+			GameObjectsExited[{a, b}] = false;
+		}
+		a->OnCollisionStay(b);
+	}
+	else if (!GameObjectsExited[{a, b}] && GameObjectsEntered[{a, b}])
+	{
+		a->OnCollisionExit(b);
+		GameObjectsEntered[{a, b}] = false;
+		GameObjectsExited[{a, b}] = true;
+	}
+}
+
 GameManager::GameManager()
 {
 	EM = new EnemyManager();
@@ -42,15 +67,7 @@ void GameManager::Update()
 				right = i;
 			}
 
-			ShapeType pairType = left->Collider.Type | right->Collider.Type;
-
-			// Check every object against every other object
-			bool isColliding = collisionCheckers[pairType](left->Position, left->Collider, right->Position, right->Collider);
-
-			if (isColliding)
-			{
-
-			}
+			CheckCollision(left, right);
 		}
 
 		for (auto j : EM->Enemies)
@@ -66,13 +83,7 @@ void GameManager::Update()
 
 			ShapeType pairType = left->Collider.Type | right->Collider.Type;
 
-			// Check every object against every other object
-			bool isColliding = collisionCheckers[pairType](left->Position, left->Collider, right->Position, right->Collider);
-
-			if (isColliding)
-			{
-
-			}
+			CheckCollision(left, right);
 		}
 	}
 
@@ -92,15 +103,7 @@ void GameManager::Update()
 				right = i;
 			}
 
-			ShapeType pairType = left->Collider.Type | right->Collider.Type;
-
-			// Check every object against every other object
-			bool isColliding = collisionCheckers[pairType](left->Position, left->Collider, right->Position, right->Collider);
-
-			if (isColliding)
-			{
-
-			}
+			CheckCollision(left, right);
 		}
 	}
 
