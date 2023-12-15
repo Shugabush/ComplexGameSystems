@@ -2,7 +2,6 @@
 #include "GameManager.h"
 
 #include <thread>
-#include <iostream>
 
 void EnemyManager::Update()
 {

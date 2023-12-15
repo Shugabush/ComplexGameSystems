@@ -8,12 +8,14 @@
 class EnemyManager
 {
 	std::queue<Enemy*> PendingEnemies;
-	std::vector<Enemy*> Enemies;
 	std::queue<Enemy*> DestroyedEnemies;
 
 	bool UpdateTerminated;
 
 public:
+
+	std::vector<Enemy*> Enemies;
+
 	void Update();
 	void Draw();
 

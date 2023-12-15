@@ -1,6 +1,9 @@
 #pragma once
 
-#include <Vector2.hpp>
+#include "Vector2.hpp"
+#include "Ray.hpp"
+
+#include "Shape.h"
 
 class GameObject
 {
@@ -21,7 +24,13 @@ public:
 	virtual void Update();
 	virtual void LateUpdate();
 
+	virtual void OnCollisionEnter(GameObject* other);
+	virtual void OnCollisionStay(GameObject* other);
+	virtual void OnCollisionExit(GameObject* other);
+
 	virtual void EarlyDraw();
 	virtual void Draw();
 	virtual void LateDraw();
+
+	Shape Collider;
 };

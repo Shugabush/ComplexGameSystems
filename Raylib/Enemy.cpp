@@ -1,8 +1,6 @@
 #include "Enemy.h"
 #include "Utils.h"
 
-#include <iostream>
-
 void Enemy::Update()
 {
 	if (TargetObj != nullptr)

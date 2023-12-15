@@ -5,6 +5,9 @@ GameObject::GameObject()
 {
 	Position = { GetScreenWidth() * 0.5f, GetScreenHeight() * 0.5f };
 	Rotation = 0;
+	Collider = Shape();
+	Collider.Type = ShapeType::CIRCLE;
+	Collider.CircleData.Radius = 25;
 	Texture = Texture2D();
 	Tint = WHITE;
 }
@@ -16,7 +19,7 @@ Vector2 GameObject::GetForwardDirection() const
 
 void GameObject::Start()
 {
-
+	
 }
 
 void GameObject::EarlyUpdate()
@@ -32,6 +35,21 @@ void GameObject::Update()
 void GameObject::LateUpdate()
 {
 	
+}
+
+void GameObject::OnCollisionEnter(GameObject* other)
+{
+
+}
+
+void GameObject::OnCollisionStay(GameObject* other)
+{
+
+}
+
+void GameObject::OnCollisionExit(GameObject* other)
+{
+
 }
 
 void GameObject::EarlyDraw()

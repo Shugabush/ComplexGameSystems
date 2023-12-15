@@ -22,7 +22,7 @@ int main()
 	player->Rotation = -PI / 2;
 	gm->SpawnObject(player);
 
-	gm->InitEnemyThread();
+	gm->Init();
 
 	Texture2D EnemyTexture = LoadTexture("Ships/ship_0012.png");
 

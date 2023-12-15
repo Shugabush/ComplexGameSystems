@@ -1,7 +1,6 @@
 #pragma once
 
-#include <raylib.h>
-#include <iostream>
+#include "Ray.hpp"
 
 struct Utils
 {
@@ -75,7 +74,6 @@ struct Utils
 	static inline T DeltaAngle(const T& current, const T& target)
 	{
 		float delta = target - current;
-		std::cout << delta * RAD2DEG << std::endl;
 		if (delta > PI)
 		{
 			delta -= 2 * PI;

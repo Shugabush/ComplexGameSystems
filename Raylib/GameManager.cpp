@@ -1,4 +1,7 @@
 #include "GameManager.h"
+
+#include "EnumUtils.h"
+
 #include <iostream>
 
 GameManager::GameManager()
@@ -6,42 +9,127 @@ GameManager::GameManager()
 	EM = new EnemyManager();
 }
 
-void GameManager::InitEnemyThread()
+void GameManager::Init()
 {
 	EnemyThread = std::thread(&EnemyManager::Update, EM);
+
+	collisionCheckers[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
+	collisionCheckers[ShapeType::CIRCLE | ShapeType::AABB] = CheckCircleAABB;
+	collisionCheckers[ShapeType::AABB | ShapeType::AABB] = CheckAABBAABB;
+
+	collisionDepenetrators[ShapeType::CIRCLE | ShapeType::CIRCLE] = DepenetrateCircleCircle;
+	collisionDepenetrators[ShapeType::CIRCLE | ShapeType::AABB] = DepenetrateCircleAABB;
+	collisionDepenetrators[ShapeType::AABB | ShapeType::AABB] = DepenetrateAABBAABB;
 }
 
 void GameManager::Update()
 {
 	EM->ShouldUpdate = true;
 
-	//std::cout << "Updating Game Manager" << std::endl;
+	// Check main objects against each other and enemies
+	for (auto i : MainObjects)
+	{
+		for (auto j : MainObjects)
+		{
+			if (i == j) { continue; }
+
+			GameObject* left = i;
+			GameObject* right = j;
+
+			if (i->Collider.Type > j->Collider.Type)
+			{
+				left = j;
+				right = i;
+			}
+
+			ShapeType pairType = left->Collider.Type | right->Collider.Type;
+
+			// Check every object against every other object
+			bool isColliding = collisionCheckers[pairType](left->Position, left->Collider, right->Position, right->Collider);
+
+			if (isColliding)
+			{
+
+			}
+		}
+
+		for (auto j : EM->Enemies)
+		{
+			GameObject* left = i;
+			GameObject* right = j;
+
+			if (i->Collider.Type > j->Collider.Type)
+			{
+				left = j;
+				right = i;
+			}
+
+			ShapeType pairType = left->Collider.Type | right->Collider.Type;
+
+			// Check every object against every other object
+			bool isColliding = collisionCheckers[pairType](left->Position, left->Collider, right->Position, right->Collider);
+
+			if (isColliding)
+			{
+
+			}
+		}
+	}
+
+	// Check enemies against each other
+	for (auto& i : EM->Enemies)
+	{
+		for (auto j : EM->Enemies)
+		{
+			if (i == j) { continue; }
+
+			GameObject* left = i;
+			GameObject* right = j;
+
+			if (i->Collider.Type > j->Collider.Type)
+			{
+				left = j;
+				right = i;
+			}
+
+			ShapeType pairType = left->Collider.Type | right->Collider.Type;
+
+			// Check every object against every other object
+			bool isColliding = collisionCheckers[pairType](left->Position, left->Collider, right->Position, right->Collider);
+
+			if (isColliding)
+			{
+
+			}
+		}
+	}
+
 	while (!PendingObjects.empty())
 	{
 		GameObject* obj = PendingObjects.front();
-		GameObjects.push_back(obj);
+		MainObjects.push_back(obj);
 		PendingObjects.pop();
 	}
 
 	while (!DestroyedObjects.empty())
 	{
 		GameObject* obj = DestroyedObjects.front();
-		GameObjects.erase(std::remove(GameObjects.begin(), GameObjects.end(), obj), GameObjects.end());
+		MainObjects.erase(std::remove(MainObjects.begin(), MainObjects.end(), obj), MainObjects.end());
 		DestroyedObjects.pop();
 		delete obj;
 	}
 
-	for (auto obj : GameObjects)
+	for (auto obj : MainObjects)
 	{
 		obj->EarlyUpdate();
 	}
 
-	for (auto obj : GameObjects)
+	for (auto obj : MainObjects)
 	{
 		obj->Update();
 	}
 
-	for (auto obj : GameObjects)
+	for (auto obj : MainObjects)
 	{
 		obj->LateUpdate();
 		obj->Position = Vector2Clamp(obj->Position, { 0, 0 },
@@ -56,17 +144,17 @@ void GameManager::Draw()
 
 	EM->Draw();
 
-	for (auto obj : GameObjects)
+	for (auto obj : MainObjects)
 	{
 		obj->EarlyDraw();
 	}
 
-	for (auto obj : GameObjects)
+	for (auto obj : MainObjects)
 	{
 		obj->Draw();
 	}
 
-	for (auto obj : GameObjects)
+	for (auto obj : MainObjects)
 	{
 		obj->LateDraw();
 	}
