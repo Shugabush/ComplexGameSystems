@@ -17,7 +17,9 @@ public:
 	std::vector<Enemy*> Enemies;
 
 	void Update();
+	void EarlyDraw();
 	void Draw();
+	void LateDraw();
 
 	bool ShouldUpdate = true;
 

@@ -45,18 +45,24 @@ void EnemyManager::Update()
 	}
 }
 
-void EnemyManager::Draw()
+void EnemyManager::EarlyDraw()
 {
 	for (auto Enemy : Enemies)
 	{
 		Enemy->EarlyDraw();
 	}
+}
 
+void EnemyManager::Draw()
+{
 	for (auto Enemy : Enemies)
 	{
 		Enemy->Draw();
 	}
+}
 
+void EnemyManager::LateDraw()
+{
 	for (auto Enemy : Enemies)
 	{
 		Enemy->LateDraw();

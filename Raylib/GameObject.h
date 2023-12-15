@@ -8,6 +8,8 @@
 class GameObject
 {
 public:
+	static bool RenderCollision;
+
 	GameObject();
 
 	Vector2 Position;

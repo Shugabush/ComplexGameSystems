@@ -145,18 +145,19 @@ void GameManager::Draw()
 	// Wait for enemy manager to update before drawing
 	while (EM->ShouldUpdate) {}
 
-	EM->Draw();
-
+	EM->EarlyDraw();
 	for (auto obj : MainObjects)
 	{
 		obj->EarlyDraw();
 	}
 
+	EM->Draw();
 	for (auto obj : MainObjects)
 	{
 		obj->Draw();
 	}
 
+	EM->LateDraw();
 	for (auto obj : MainObjects)
 	{
 		obj->LateDraw();

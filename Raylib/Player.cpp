@@ -1,38 +1,60 @@
 #include "Player.h"
 #include "GameManager.h"
+#include "Utils.h"
 
 #include "Ray.hpp"
 #include "raymath.h"
 
 void Player::Update()
 {
+	Vector2 targetDir;
 	if (IsKeyDown(KEY_UP))
 	{
-		Velocity.y = -1;
+		targetDir.y = -1;
 	}
 	else if (IsKeyDown(KEY_DOWN))
 	{
-		Velocity.y = 1;
+		targetDir.y = 1;
 	}
 	else
 	{
-		Velocity.y = 0;
+		targetDir.y = 0;
 	}
 
 	if (IsKeyDown(KEY_RIGHT))
 	{
-		Velocity.x = 1;
+		targetDir.x = 1;
 	}
 	else if (IsKeyDown(KEY_LEFT))
 	{
-		Velocity.x = -1;
+		targetDir.x = -1;
 	}
 	else
 	{
-		Velocity.x = 0;
+		targetDir.x = 0;
 	}
 
-	Velocity = Vector2Scale(Vector2Normalize(Velocity), MovementSpeed * GetFrameTime() * 60);
+	targetDir = Vector2Normalize(targetDir);
+
+	if (targetDir.x == 0 && targetDir.y == 0)
+	{
+		TargetRotation = Rotation;
+
+		Velocity = { 0, 0 };
+	}
+	else
+	{
+		TargetRotation = Utils::AngleFromVector(targetDir);
+
+		Velocity = Utils::VectorFromAngle(TargetRotation);
+
+		Velocity = Vector2Scale(Vector2Normalize(Velocity), MovementSpeed * GetFrameTime() * 60);
+	}
+}
+
+void Player::LateUpdate()
+{
+	Rotation = Utils::RotateTowards(Rotation, TargetRotation, GetFrameTime() * RotationSpeed);
 
 	Position = Vector2Add(Position, Velocity);
 }

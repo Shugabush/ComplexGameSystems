@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "Utils.h"
 
+bool GameObject::RenderCollision = false;
+
 GameObject::GameObject()
 {
 	Position = { GetScreenWidth() * 0.5f, GetScreenHeight() * 0.5f };
@@ -62,19 +64,20 @@ void GameObject::Draw()
 	DrawTexturePro(Texture, { 0, 0, (float)Texture.width, (float)Texture.height },
 		{ Position.x, Position.y, (float)Texture.width, (float)Texture.height},
 		{ (float)Texture.width * 0.5f, (float)Texture.height * 0.5f }, Rotation * RAD2DEG, Tint);
-
-	switch (Collider.Type)
-	{
-	case ShapeType::CIRCLE:
-		DrawCircleLines((int)Position.x, (int)Position.y, Collider.CircleData.Radius, GREEN);
-		break;
-	case ShapeType::AABB:
-		DrawRectangleLines((int)Position.x, (int)Position.y, Collider.AABBData.HalfExtents.x, Collider.AABBData.HalfExtents.y, GREEN);
-		break;
-	}
 }
 
 void GameObject::LateDraw()
 {
-
+	if (RenderCollision)
+	{
+		switch (Collider.Type)
+		{
+		case ShapeType::CIRCLE:
+			DrawCircleLines((int)Position.x, (int)Position.y, Collider.CircleData.Radius, GREEN);
+			break;
+		case ShapeType::AABB:
+			DrawRectangleLines((int)Position.x, (int)Position.y, Collider.AABBData.HalfExtents.x, Collider.AABBData.HalfExtents.y, GREEN);
+			break;
+		}
+	}
 }
