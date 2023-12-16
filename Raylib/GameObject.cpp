@@ -6,6 +6,7 @@ bool GameObject::RenderCollision = false;
 
 GameObject::GameObject()
 {
+	Tag = "Object";
 	Manager = nullptr;
 	Position = { GetScreenWidth() * 0.5f, GetScreenHeight() * 0.5f };
 	Rotation = 0;
@@ -14,6 +15,11 @@ GameObject::GameObject()
 	Collider.CircleData.Radius = 25;
 	Texture = Texture2D();
 	Tint = WHITE;
+}
+
+std::string GameObject::GetTag() const
+{
+	return Tag;
 }
 
 Vector2 GameObject::GetForwardDirection() const

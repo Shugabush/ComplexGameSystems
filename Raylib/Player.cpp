@@ -8,6 +8,11 @@
 
 #include <iostream>
 
+Player::Player() : GameObject()
+{
+	Tag = "Player";
+}
+
 void Player::Update()
 {
 	GameObject::Update();
@@ -24,7 +29,6 @@ void Player::Update()
 		newBullet->Velocity = GetForwardDirection();
 		newBullet->Rotation = Rotation;
 		Manager->SpawnObject(newBullet);
-		std::cout << "spawning bullet..." << std::endl;
 	}
 
 	Vector2 targetDir;

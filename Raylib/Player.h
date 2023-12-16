@@ -8,6 +8,7 @@ class Player : public GameObject
 	float TargetRotation;
 
 public:
+	Player();
 
 	Vector2 Velocity;
 	float MovementSpeed = 5;

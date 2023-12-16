@@ -172,5 +172,17 @@ void GameManager::SpawnObject(GameObject* obj)
 
 void GameManager::DestroyObject(GameObject* obj)
 {
-	DestroyedObjects.push(obj);
+	auto foundObj = std::find(MainObjects.begin(), MainObjects.end(), obj);
+	if (foundObj != MainObjects.end())
+	{
+ 		DestroyedObjects.push(obj);
+	}
+	else
+	{
+		auto en = std::find(EM->Enemies.begin(), EM->Enemies.end(), obj);
+		if (en != EM->Enemies.end())
+		{
+			EM->DestroyEnemy(*en._Ptr);
+		}
+	}
 }

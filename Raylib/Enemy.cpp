@@ -1,6 +1,11 @@
 #include "Enemy.h"
 #include "Utils.h"
 
+Enemy::Enemy() : GameObject()
+{
+	Tag = "Enemy";
+}
+
 void Enemy::Update()
 {
 	if (TargetObj != nullptr)

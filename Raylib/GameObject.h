@@ -7,12 +7,17 @@
 
 class GameObject
 {
+protected:
+	std::string Tag;
+
 public:
 	static bool RenderCollision;
 
 	class GameManager* Manager;
 
 	GameObject();
+
+	std::string GetTag() const;
 
 	Vector2 Position;
 	float Rotation;

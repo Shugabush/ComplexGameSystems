@@ -7,6 +7,8 @@ class Enemy : public GameObject
 	float TargetRotation;
 
 public:
+	Enemy();
+
 	virtual void Update() override;
 	virtual void LateUpdate() override;
 
