@@ -166,6 +166,7 @@ void GameManager::Draw()
 
 void GameManager::SpawnObject(GameObject* obj)
 {
+	obj->Manager = this;
 	PendingObjects.push(obj);
 }
 

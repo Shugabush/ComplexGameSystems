@@ -4,6 +4,14 @@
 
 struct Utils
 {
+	static inline bool PositionIsOutOfBounds(const Vector2& pos)
+	{
+		if (pos.x > GetScreenWidth() || pos.x < 0) return true;
+		if (pos.y > GetScreenHeight() || pos.y < 0) return true;
+
+		return false;
+	}
+
 	template<typename T>
 	static inline int Sign(const T& value)
 	{

@@ -13,6 +13,7 @@ class EnemyManager
 	bool UpdateTerminated;
 
 public:
+	GameManager* Manager;
 
 	std::vector<Enemy*> Enemies;
 

@@ -18,7 +18,9 @@ int main()
 	GameManager* gm = new GameManager();
 
 	Player* player = new Player();
+	player->BulletCooldown = Timer(0.125f);
 	player->Texture = TextureLibrary::GetTexture("Ships/ship_0000.png");
+	player->BulletTexture = TextureLibrary::GetTexture("Tiles/tile_0000.png");
 	player->Texture.width *= 2;
 	player->Texture.height *= 2;
 	player->Rotation = -PI / 2;
@@ -27,8 +29,6 @@ int main()
 	gm->Init();
 
 	Texture2D EnemyTexture = TextureLibrary::GetTexture("Ships/ship_0012.png");
-	Texture2D BulletTexture1 = TextureLibrary::GetTexture("Tiles/tile_0000.png");
-	Texture2D BulletTexture2 = TextureLibrary::GetTexture("Tiles/tile_0001.png");
 
 	for (size_t i = 0; i < 25; i++)
 	{

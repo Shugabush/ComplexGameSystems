@@ -1,10 +1,12 @@
 #include "GameObject.h"
 #include "Utils.h"
+#include "GameObject.h"
 
 bool GameObject::RenderCollision = false;
 
 GameObject::GameObject()
 {
+	Manager = nullptr;
 	Position = { GetScreenWidth() * 0.5f, GetScreenHeight() * 0.5f };
 	Rotation = 0;
 	Collider = Shape();

@@ -71,6 +71,7 @@ void EnemyManager::LateDraw()
 
 void EnemyManager::SpawnEnemy(Enemy* enemy)
 {
+	enemy->Manager = Manager;
 	PendingEnemies.push(enemy);
 }
 

@@ -1,12 +1,32 @@
 #include "Player.h"
 #include "GameManager.h"
 #include "Utils.h"
+#include "Bullet.h"
 
 #include "Ray.hpp"
 #include "raymath.h"
 
+#include <iostream>
+
 void Player::Update()
 {
+	GameObject::Update();
+	BulletCooldown.Update(GetFrameTime());
+
+	if (IsKeyDown(KEY_SPACE) && BulletCooldown.OutOfTime())
+	{
+		BulletCooldown.Reset();
+
+		// Spawn bullet
+		Bullet* newBullet = new Bullet();
+		newBullet->Texture = BulletTexture;
+		newBullet->Position = Position;
+		newBullet->Velocity = GetForwardDirection();
+		newBullet->Rotation = Rotation;
+		Manager->SpawnObject(newBullet);
+		std::cout << "spawning bullet..." << std::endl;
+	}
+
 	Vector2 targetDir;
 	if (IsKeyDown(KEY_UP))
 	{
@@ -54,6 +74,8 @@ void Player::Update()
 
 void Player::LateUpdate()
 {
+	GameObject::LateUpdate();
+
 	Rotation = Utils::RotateTowards(Rotation, TargetRotation, GetFrameTime() * RotationSpeed);
 
 	Position = Vector2Add(Position, Velocity);

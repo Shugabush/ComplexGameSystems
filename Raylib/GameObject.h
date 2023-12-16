@@ -10,6 +10,8 @@ class GameObject
 public:
 	static bool RenderCollision;
 
+	class GameManager* Manager;
+
 	GameObject();
 
 	Vector2 Position;
