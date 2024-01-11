@@ -4,8 +4,22 @@
 #include <iostream>
 #include <cassert>
 
-int main()
+const int SERVER_PORT = 7777;
+const char* SERVER_PORT_CSTR = "7777";
+
+int main(int argc, char** argv)
 {
+	// exit early if no arguments were provided
+
+
+	if (argc < 2) return -1;
+
+	bool isServer = strcmp(argv[1], "Server") == 0;
+	bool isClient = !isServer;
+
+	if (isServer) std::cout << "Server" << std::endl;
+	if (isClient) std::cout << "Client" << std::endl;
+
 	// initialization of WinSock
 	// - this only occurs on Windows and its implementation of sockets
 	WSADATA wsaData;
@@ -26,7 +40,7 @@ int main()
 
 	// Resolve the local address and port to be used by this program
 	addrinfo* localAddr = nullptr;
-	success = getaddrinfo(nullptr, "0", &config, &localAddr);
+	success = getaddrinfo(nullptr, isServer ? SERVER_PORT_CSTR : "0", &config, &localAddr);
 	if (success != 0)
 	{
 		std::cerr << "ERROR: Failed to initialize sockets" << std::endl;
@@ -73,6 +87,27 @@ int main()
 		fd_set curSocketDesc;
 		FD_ZERO(&curSocketDesc);
 		FD_SET(curSocket, &curSocketDesc);
+
+		if (isClient)
+		{
+			addrinfo* serverAddr = nullptr;
+			getaddrinfo("127.0.0.1", SERVER_PORT_CSTR, &config, &serverAddr);
+			const char* msg = "John Madden";
+			const size_t msgLen = strlen(msg);
+			assert(msgLen + 1 < BUFFER_SIZE);
+			// send the message to the server
+			int bytesSent = sendto(
+				curSocket,
+				msg,
+				(int)msgLen + 1,
+				0,
+				serverAddr->ai_addr,
+				(int)serverAddr->ai_addrlen
+			);
+
+			std::cout << "Bytes Sent: " << bytesSent << std::endl;
+		}
+
 		int status = select((int)curSocket, &curSocketDesc, nullptr, nullptr, &curSocketTimeout);
 
 		// status may be ...
@@ -80,13 +115,18 @@ int main()
 		// SOCKET_ERROR => an error occurred
 		// status > 0 	=> data was recv'd!
 
+		if (isServer)
+		{
+			std::cout << status << std::endl;
+		}
+
 		if (status == SOCKET_ERROR)
 		{
 			status = WSAGetLastError();
 			return -1;
 		}
-
-		if (status > 0)
+		
+		if (isServer && status > 0)
 		{
 			addrinfo incomingAddr;
 			memset(&incomingAddr, 0, sizeof(incomingAddr));
@@ -100,7 +140,7 @@ int main()
 				(sockaddr*)&incomingAddr,
 				&incomingAddrLen);
 
-			if (bytesRecieved)
+			if (bytesRecieved > 0)
 			{
 				// Unsafe: assume message is a C-string and is shorter in length
 				// and will fit within the buffer we've allocated
@@ -109,23 +149,6 @@ int main()
 				// print it out to stdout
 				std::cout << "[MSG] " << (char*)buffer << std::endl;
 			}
-
-			addrinfo* serverAddr = nullptr;
-			getaddrinfo(nullptr, "7777", &config, &serverAddr);
-
-			const char* msg = "John Madden";
-			const size_t msgLen = strlen(msg);
-			assert(msgLen + 1 < BUFFER_SIZE);
-
-			// send the message to the server
-			sendto(
-				curSocket,
-				msg,
-				(int)msgLen + 1,
-				0,
-				serverAddr->ai_addr,
-				(int)serverAddr->ai_addrlen
-				);
 		}
 	}
 
