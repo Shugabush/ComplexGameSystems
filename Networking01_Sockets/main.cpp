@@ -10,15 +10,10 @@ const char* SERVER_PORT_CSTR = "7777";
 int main(int argc, char** argv)
 {
 	// exit early if no arguments were provided
-
-
 	if (argc < 2) return -1;
 
 	bool isServer = strcmp(argv[1], "Server") == 0;
 	bool isClient = !isServer;
-
-	if (isServer) std::cout << "Server" << std::endl;
-	if (isClient) std::cout << "Client" << std::endl;
 
 	// initialization of WinSock
 	// - this only occurs on Windows and its implementation of sockets
@@ -47,10 +42,6 @@ int main(int argc, char** argv)
 		WSACleanup();
 		return 1;
 	}
-
-	addrinfo* remoteAddr = nullptr;
-	// Resolve the remote address
-	
 
 	// create socket (won't be ready to recieve yet)
 	SOCKET curSocket = INVALID_SOCKET;
@@ -105,7 +96,34 @@ int main(int argc, char** argv)
 				(int)serverAddr->ai_addrlen
 			);
 
+			// Try to get a message back from the server
+			addrinfo incomingAddr;
+			memset(&incomingAddr, 0, sizeof(incomingAddr));
+			socklen_t incomingAddrLen = sizeof(incomingAddr);
+
+			int bytesRecieved = recvfrom(
+				curSocket,
+				(char*)buffer,
+				BUFFER_SIZE,
+				0,
+				(sockaddr*)&incomingAddr,
+				&incomingAddrLen);
+
+			if (bytesRecieved > 0)
+			{
+				// Unsafe: assume message is a C-string and is shorter in length
+				// and will fit within the buffer we've allocated
+				buffer[bytesRecieved] = '\0'; // insert NULL-terminating character
+
+				// print it out to stdout
+				std::cout << "[MSG] " << (char*)buffer << std::endl;
+
+				const size_t msgLen = strlen((char*)buffer);
+				assert(msgLen + 1 < BUFFER_SIZE);
+			}
+
 			std::cout << "Bytes Sent: " << bytesSent << std::endl;
+			std::cout << "Bytes Recieved: " << bytesRecieved << std::endl;
 		}
 
 		int status = select((int)curSocket, &curSocketDesc, nullptr, nullptr, &curSocketTimeout);
@@ -114,11 +132,6 @@ int main(int argc, char** argv)
 		// 0 			=> socket timed out (i.e., did not recv any information while waiting)
 		// SOCKET_ERROR => an error occurred
 		// status > 0 	=> data was recv'd!
-
-		if (isServer)
-		{
-			std::cout << status << std::endl;
-		}
 
 		if (status == SOCKET_ERROR)
 		{
@@ -148,6 +161,22 @@ int main(int argc, char** argv)
 
 				// print it out to stdout
 				std::cout << "[MSG] " << (char*)buffer << std::endl;
+
+				const size_t msgLen = strlen((char*)buffer);
+				assert(msgLen + 1 < BUFFER_SIZE);
+
+				// send the message back to the client
+				int bytesSent = sendto(
+					curSocket,
+					(char*)buffer,
+					bytesRecieved,
+					0,
+					(sockaddr*)&incomingAddr,
+					sizeof(incomingAddr)
+				);
+
+				std::cout << "Bytes Sent: " << bytesSent << std::endl;
+				std::cout << "Bytes Recieved: " << bytesRecieved << std::endl;
 			}
 		}
 	}
